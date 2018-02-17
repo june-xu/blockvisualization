@@ -6,7 +6,8 @@ const express = require('express'),
       PORT = process.env.PORT || 8080,
       app = express(),
       request = require('request'),
-      fs = require('fs');
+      fs = require('fs'),
+      moment = require('moment');
     //   path.join(__dirname, 'app', 'public')
 app.use(express.static('public'));
 app.use(bodyParser.json())
@@ -48,6 +49,20 @@ app.get('/', function (req, res) {
 //     });
 // });
 
+var dataParser = function(deets){
+    var d = deets.result
+    
+      var timestamps = [];
+      for (var x = 0; x < d.length; x++){
+          var t = new Date(d[x].timeStamp*1000);
+        // var t = moment().unix(d[x].timeStamp).format("dd.mm.yyyy hh:MM:ss");
+        // var formatted = t.format("dd.mm.yyyy hh:MM:ss");
+        // var date = moment(d[x].timeStamp);
+        // timestamps.push(formatted);//new Date(d[x].timeStamp).toString());
+      }
+      return(timestamps)
+}
+
 // send balance data
 app.get('/getData', function(req, res) {
     fs.readFile('myjsonfile.json', 'utf8', function readFileCallback(err, data){
@@ -55,7 +70,7 @@ app.get('/getData', function(req, res) {
             console.log(err);
         } else {
             var obj = JSON.parse(data); //now it an object
-            res.send(obj)
+            res.send(dataParser(obj));
     }});
 });
 
