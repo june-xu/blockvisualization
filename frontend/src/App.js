@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import logo from './logo.svg';
 import './App.css';
@@ -21,6 +21,7 @@ const App = () => (
       <hr />
 
       <Route exact path="/" component={Home} />
+      <Route path="/block/:blockNum" component={Block} />
       <Route path="/blocks" component={Blocks} />
       <Route path="/topics" component={Topics} />
     </div>
@@ -35,7 +36,7 @@ const Home = () => (
 
 const BlockEntry = ({ blockNum, timestamp, numTxns }) => (
   <tr>
-    <td>{blockNum}</td>
+    <td><Link to={"/block/"+blockNum}>{blockNum}</Link></td>
     <td>{(new Date(timestamp*1000)).toString()}</td>
     <td>{numTxns}</td>
   </tr>
@@ -69,6 +70,43 @@ class Blocks extends React.Component {
           key={block.blockNum} timestamp={block.timestamp} blockNum={block.blockNum} numTxns={block.txns}
         />)}
         </tbody></table>
+      </div>
+    );
+  }
+}
+
+class Block extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      timestamp: 0,
+      transactions: [],
+    };
+  }
+
+  componentDidMount() {
+    fetch('http://localhost:5000/block/' + this.props.match.params.blockNum).then(res=>res.json()).then(out=>{
+      this.setState(out);
+      console.log(out);
+    });
+  }
+
+  render() {
+    return (
+      <div>
+      <h1>Block</h1>
+      <div><Link to="/blocks">back</Link></div>
+      <div>
+        <b>Timestamp: </b>{(new Date(this.state.timestamp)).toString()}
+      </div>
+      <div>
+        <b>Transactions</b>
+      </div>
+
+      {this.state.transactions.map(txn => <div key={txn}>
+        <code>{txn}</code>
+      </div>)}
+
       </div>
     );
   }
