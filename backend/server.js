@@ -9,6 +9,9 @@ const express = require('express'),
       fs = require('fs'),
       moment = require('moment');
     //   path.join(__dirname, 'app', 'public')
+
+const cors = require('cors')
+app.use(cors());
 app.use(express.static('public'));
 app.use(bodyParser.json())
 app.set('port', (process.env.PORT || 5000))
@@ -63,6 +66,13 @@ var dataParser = function(deets){
       return(timestamps)
 }
 
+app.get('/blocks', (req, res) => {
+  // todo: replace with call to db
+  fs.readFile('./fixtures/blocks.json', (err, data) => {
+    if (err) return console.log(err);
+    res.send(JSON.parse(data));
+  });
+});
 
 app.get('/block/:blockHeight', (req, res) => {
   const blockHeight = req.params.blockHeight;
