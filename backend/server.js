@@ -51,7 +51,7 @@ app.get('/', function (req, res) {
 
 var dataParser = function(deets){
     var d = deets.result
-    
+
       var timestamps = [];
       for (var x = 0; x < d.length; x++){
           var t = new Date(d[x].timeStamp*1000);
@@ -62,6 +62,19 @@ var dataParser = function(deets){
       }
       return(timestamps)
 }
+
+
+app.get('/block/:blockHeight', (req, res) => {
+  const blockHeight = req.params.blockHeight;
+
+  // todo: replace with call to db
+  fs.readFile('./fixtures/block/' + blockHeight + '.json', (err, data) => {
+    if (err) res.send({});
+    res.send(JSON.parse(data));
+  });
+
+});
+
 
 // send balance data
 app.get('/getData', function(req, res) {
