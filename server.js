@@ -1,22 +1,46 @@
-// console.log("working")
-var Web3 = require('web3');
-var web3 = new Web3(new Web3.providers.HttpProvider());
-var version = web3.version.api;
-var jquery = require('jquery');
+'use strict'
+
+const express = require('express'),
+      path = require('path'),
+      bodyParser = require('body-parser'),
+      PORT = process.env.PORT || 8080,
+      app = express(),
+      request = require('request');
+
+app.use(express.static(path.join(__dirname, 'app', 'public')));
+app.use(bodyParser.json())
+app.set('port', (process.env.PORT || 5000))
 
 var API_KEY = 'YEEWRXRQ8R2TN2ATBFTXWIF7UH81K4UR7D'
+var api = require('etherscan-api').init(API_KEY);
 
-jquery.getJSON('https://api.etherscan.io/api?module=contract&action=getabi&address=0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413&apikey=' + API_KEY, function (data) {
-    var contractABI = "";
-    contractABI = JSON.parse(data.result);
-    if (contractABI != ''){
-        var MyContract = web3.eth.contract(contractABI);
-        var myContractInstance = MyContract.at("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d");
-        var result = myContractInstance.memberId("0xfe8ad7dd2f564a877cc23feea6c0a9cc2e783715");
-        console.log("result1 : " + result);            
-        var result = myContractInstance.members(1);
-        console.log("result2 : " + result);
-    } else {
-        console.log("Error" );
-    }            
+var getData = function(callback) {
+	var block = api.proxy.eth_getBlockByNumber(9);
+    block.then(function(balanceData){
+        callback(balanceData);
+      });
+};
+
+
+// Process application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({extended: false}))
+
+// Process application/json
+app.use(bodyParser.json())
+
+// Index route
+app.get('/', function (req, res) {
+	res.send('Hello world')
 });
+
+// send balance data
+app.get('/balance', function(req, res) {
+	getData(function(body){
+		res.send(body);
+	});
+});
+
+// Spin up the server
+app.listen(app.get('port'), function() {
+	console.log('running on port', app.get('port'))
+})
