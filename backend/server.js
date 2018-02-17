@@ -56,14 +56,27 @@ var dataParser = function(deets){
     var d = deets.result
 
       var timestamps = [];
+      var byHour = {};
+      var hourCount = 1;
+      var start;
       for (var x = 0; x < d.length; x++){
-          var t = new Date(d[x].timeStamp*1000);
-        // var t = moment().unix(d[x].timeStamp).format("dd.mm.yyyy hh:MM:ss");
-        // var formatted = t.format("dd.mm.yyyy hh:MM:ss");
-        // var date = moment(d[x].timeStamp);
-        // timestamps.push(formatted);//new Date(d[x].timeStamp).toString());
+          if (typeof start == 'undefined'){
+            start = d[x.timeStamp];
+            byHour[hourCount] = [];
+          }
+          if (d[x].timeStamp - start < 3600){
+              byHour[hourCount].push(d[x].timeStamp);
+          } else {
+              hourCount += 1;
+              byHour[hourCount] = [d[x].timeStamp];
+              start = d[x].timeStamp;
+          }
+          
+        //   var t = new Date(d[x].timeStamp * 1000);
+        //   timestamps.push(t.toISOString());
       }
-      return(timestamps)
+
+      return(byHour)
 }
 
 app.get('/blocks', (req, res) => {
@@ -87,7 +100,7 @@ app.get('/block/:blockHeight', (req, res) => {
 
 
 // send balance data
-app.get('/getData', function(req, res) {
+app.get('/getTime', function(req, res) {
     fs.readFile('myjsonfile.json', 'utf8', function readFileCallback(err, data){
         if (err){
             console.log(err);

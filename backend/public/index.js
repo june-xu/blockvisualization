@@ -1,4 +1,4 @@
-$.get( "http://localhost:5000/getData", function( data ) {
+$.get( "http://localhost:5000/getTime", function( data ) {
   console.log(data);
   // console.log(data.result);
   // var d = data.result
