@@ -104,7 +104,11 @@ class Block extends React.Component {
       </div>
 
       {this.state.transactions.map(txn => <div key={txn}>
+
+        {/* todo: our very own txn page */}
+        <a href={"https://etherscan.io/tx/" + txn}>
         <code>{txn}</code>
+        </a>
       </div>)}
 
       </div>
