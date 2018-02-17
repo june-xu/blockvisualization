@@ -5,9 +5,10 @@ const express = require('express'),
       bodyParser = require('body-parser'),
       PORT = process.env.PORT || 8080,
       app = express(),
-      request = require('request');
-
-app.use(express.static(path.join(__dirname, 'app', 'public')));
+      request = require('request'),
+      fs = require('fs');
+    //   path.join(__dirname, 'app', 'public')
+app.use(express.static('public'));
 app.use(bodyParser.json())
 app.set('port', (process.env.PORT || 5000))
 
@@ -38,15 +39,24 @@ app.get('/', function (req, res) {
 	res.sendFile(path.join(__dirname + '/index.html'));
 });
 
+// For writing data
+// getData(function(body){
+//     var json = JSON.stringify(body);
+//     fs.writeFile('myjsonfile.json', json, 'utf8', function(){
+//         // if (err) throw err;
+//         res.send(body);
+//     });
+// });
+
 // send balance data
-app.get('/balance', function(req, res) {
-    // res.header('Access-Control-Allow-Origin', '*')
-    // res.header('Access-Control-Allow-Credentials', true)
-    // res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS')
-    // res.header('Access-Control-Allow-Headers', 'Content-Type')
-	getData(function(body){
-		res.send(body);
-	});
+app.get('/getData', function(req, res) {
+    fs.readFile('myjsonfile.json', 'utf8', function readFileCallback(err, data){
+        if (err){
+            console.log(err);
+        } else {
+            var obj = JSON.parse(data); //now it an object
+            res.send(obj)
+    }});
 });
 
 // Spin up the server
