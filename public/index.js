@@ -5,6 +5,7 @@ $.get( "http://localhost:5000/getData", function( data ) {
   var timestamps = [];
 
   for (var x = 0; x < d.length; x++){
-      console.log(d[x]);
+      timestamps.push(d[x].timeStamp);
   }
+  console.log(timestamps)
 });

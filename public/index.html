@@ -5,17 +5,22 @@
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <style> 
+        .bar {
+            fill: steelblue;
+        }
+        
+        .bar:hover {
+            fill: brown;
+        }
+        
+        .axis--x path {
+            display: none;
+        }
+    </style>
     <script src="index.js"></script>
-    <!-- <script>
-        $.get( "http://localhost:5000/getData", function( data ) {
-            // console.log(data);
-            var d = data.result
-            for (var x = 0; x < d.lenth; x++){
-                console.log(d[x]);
-            }
-        });
-    </script> -->
 </head>
+<svg width="960" height="500"></svg>
 <body>
 <p>tst</p>
 </body>
