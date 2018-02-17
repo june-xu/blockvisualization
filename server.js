@@ -35,11 +35,15 @@ app.use(bodyParser.json())
 
 // Index route
 app.get('/', function (req, res) {
-	res.send('Hello world')
+	res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 // send balance data
 app.get('/balance', function(req, res) {
+    // res.header('Access-Control-Allow-Origin', '*')
+    // res.header('Access-Control-Allow-Credentials', true)
+    // res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS')
+    // res.header('Access-Control-Allow-Headers', 'Content-Type')
 	getData(function(body){
 		res.send(body);
 	});

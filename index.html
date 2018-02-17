@@ -4,9 +4,14 @@
     src="http://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
-    <!-- <script src="etherscan.js"></script> -->
+    <!-- <script src="index.js"></script> -->
+    <script>
+        $.get( "http://localhost:5000/balance", function( data ) {
+            console.log(data);
+        });
+    </script>
 </head>
 <body>
-
+<p>tst</p>
 </body>
 </html>
