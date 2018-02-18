@@ -14,7 +14,7 @@ idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries
 __pycache__/
-
+etherscan_api/config.py
 
 
 # Logs
