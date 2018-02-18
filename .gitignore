@@ -1,6 +1,9 @@
 frontend/package-lock.json
 dteam.sql
 
+backend/package-lock.json
+frontend/package-lock.json
+
 # Logs
 logs
 *.log
