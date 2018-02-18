@@ -44,7 +44,11 @@
 
 .content {
     background-color: white; 
-    color: black; 
+    color: black;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
 }
 .header {
     background-color: purple;
@@ -84,6 +88,9 @@
 }
 
 .scale {
+    padding-left: 85px;
+    padding-right: 85px;
+    padding-bottom: 20px;
     width: 1068px !important;
     height: 550px !important;
     margin-left: auto !important;
@@ -101,8 +108,16 @@
     font-family: Montserrat;
     background-color: aqua;
     width: 152px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .blocks-header {
     padding-left: 80px;
+    text-align: center;
+}
+
+.blocks-table {
+    margin-left: auto;
+    margin-right: auto;
 }

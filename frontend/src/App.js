@@ -81,6 +81,7 @@ const BlockEntry = ({ blockNum, timestamp, numTxns }) => (
 class Blocks extends React.Component {
   constructor(props) {
     super(props);
+    this.chart = window.Chart;
     this.state = { blocks: [] }
   }
 
@@ -89,14 +90,59 @@ class Blocks extends React.Component {
       this.setState({
         blocks: out,
       })
+      this.renderGraph()
     });
+  }
+
+  renderGraph() {
+      var txns = []
+      for (var i = 0; i<this.state.blocks.length; i++) {
+        txns.push(this.state.blocks[i].txns);
+      }
+      var labelsArray = []
+      for (var t = 5000000; t<5000099; t++) {
+        labelsArray.push(t);
+      }
+      var barChartData = {
+              labels: labelsArray,
+              datasets: [{
+                  label: "Number of Transactions",
+                  backgroundColor: '#3cb44b',
+                  borderColor: '#3cb44b',
+                  borderWidth: 1,
+                  data: txns
+              }]
+      };
+        var ctx = document.getElementById('chart3').getContext('2d');
+        var myBarChart = new this.chart(ctx, {
+          type: 'bar',
+          data: barChartData,
+          options: {
+              responsive: true,
+              legend: {
+                  position: 'top',
+              },
+              title: {
+                  display: true,
+                  text: 'CryptoKitties Traffic'
+              },
+              scales: {
+                xAxes: [{
+                    stacked: true
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+          }
+      });
   }
 
   render() {
     return (
       <div className="blocks-header">
         <h2 className="title">Blocks</h2>
-        <table><tbody>
+        <table className="blocks-table"><tbody>
         <tr>
           <td>Block Height</td>
           <td>Timestamp</td>
@@ -106,6 +152,8 @@ class Blocks extends React.Component {
           key={block.blockNum} timestamp={block.timestamp} blockNum={block.blockNum} numTxns={block.txns}
         />)}
         </tbody></table>
+        <canvas id="chart3" className="scale"></canvas>
+        <div className="chart"></div>
       </div>
     );
   }
@@ -116,7 +164,6 @@ class AccountActivity extends React.Component {
       super(props);
       this.d3 = window.d3;
       this.chart = window.Chart;
-      // this.state.blocks = [];
   }
   componentDidMount() {  
       function getActivity(data) {
