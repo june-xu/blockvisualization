@@ -2,12 +2,17 @@ from flask import Flask, jsonify, request
 from datetime import datetime
 from .api_auth import require_appkey
 from .api_methods import historical
+from flask_cors import cross_origin, CORS
+
+
 
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/foo": {"origins": "*"}})
+app.config['CORS_HEADERS'] = 'Content-Type'
 
-
-@app.route('/eth_api', methods=['GET', 'POST'])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+@app.route('/api/v1', methods=['GET', 'POST'])
 #@require_appkey
 def index():
     # forward the request to the data grabber.
