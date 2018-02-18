@@ -1,11 +1,14 @@
 import psycopg2
 from etherscan.accounts import Account
 from etherscan.contracts import Contract
-import json
-import pdb
 import pandas as pd
+from config import pg_uname, pg_pass, pg_url, table, db_name
 
-API_KEY = 'JWMI2CVRP23PM5PYMZ89YPU6EPS45YEWZP'
+
+
+
+from config import ether_key
+
 # ADDRESS = '0x06012c8cf97BEaD5deAe237070F9587f8E7A266d' #cryptokitties
 # ADDRESS = '0x1A468849923b441a10B2673af9A74b5b71906087' #nbacrypto
 # ADDRESS = '0x26D5Bd2dfEDa983ECD6c39899e69DAE6431Dffbb' #erc20 #no results returned
@@ -40,19 +43,19 @@ COL_NAMES = {
     }
 
 DBS = {
-    'remote': {
-        'host': 'dteam.c0u8aiwmaigv.us-east-1.rds.amazonaws.com',
-        'port': 5432,
-        'user': 'postgres',
-        'password': 'dteam2018',
-        'dbname': 'dteam',
-        'connect_timeout': 20,
+        'remote': {
+            'host': pg_url,
+            'port': 5432,
+            'user': pg_uname,
+            'password': pg_pass,
+            'dbname': table,
+            'connect_timeout': 20,
         },
-    'local': {
-        'port': 5432,
-        'dbname':'dteam',
-        'user':'postgres',
-        'connect_timeout': 20,
+        'local': {
+            'port': 5432,
+            'dbname': db_name,
+            'user': pg_uname,
+            'connect_timeout': 20,
         },
     }
 
@@ -84,14 +87,15 @@ def get_single_transaction_page():
     return transactions
 
 def get_all_transactions():
-    api = Account(address=ADDRESS, api_key=API_KEY)
+    api = Account(address=ADDRESS, api_key=ether_key)
     transactions = api.get_all_transactions(offset=10000, sort='asc', internal=True)
     return transactions
 
 def get_contract_abi():
-    api = Contract(address=ADDRESS, api_key=API_KEY)
+    api = Contract(address=ADDRESS, api_key=ether_key)
     abi = api.get_abi()
     return abi
+
 
 def main():
     # t = get_single_transaction_page()
