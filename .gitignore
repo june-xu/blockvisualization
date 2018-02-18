@@ -1,8 +1,20 @@
+
+apply-gitignore = !git ls-files -ci --exclude-standard -z | xargs -0 git rm --cached
+
 frontend/package-lock.json
 dteam.sql
 
 backend/package-lock.json
 frontend/package-lock.json
+
+#python
+*.py[cod]
+idea/**/workspace.xml                       
+.idea/**/tasks.xml
+.idea/dictionaries
+__pycache__/
+
+
 
 # Logs
 logs

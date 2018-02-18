@@ -1,8 +1,6 @@
 import psycopg2
 from etherscan.accounts import Account
 from etherscan.contracts import Contract
-import json
-import pdb
 import pandas as pd
 
 API_KEY = 'JWMI2CVRP23PM5PYMZ89YPU6EPS45YEWZP'
@@ -92,6 +90,7 @@ def get_contract_abi():
     api = Contract(address=ADDRESS, api_key=API_KEY)
     abi = api.get_abi()
     return abi
+
 
 def main():
     # t = get_single_transaction_page()
