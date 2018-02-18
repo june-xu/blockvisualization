@@ -47,7 +47,8 @@
     color: black; 
 }
 .header {
-    background-color: purple; 
+    background-color: purple;
+    font-family: Montserrat;
 }
 
 .selectors {
