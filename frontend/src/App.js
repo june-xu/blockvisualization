@@ -22,14 +22,17 @@ const App = () => (
             <nav className="mdl-navigation">
               <a className="mdl-navigation__link" href="/">Home</a>
               <a className="mdl-navigation__link" href="/blocks">Blocks</a>
-              <a className="mdl-navigation__link" href="">Test</a>
-              <a className="mdl-navigation__link" href="">Graphs</a>
+              <a className="mdl-navigation__link" href="/topics">Topics</a>
+              <a className="mdl-navigation__link" href="/test">Test</a>
+              <a className="mdl-navigation__link" href="/account">Account Activity</a> 
+              <a className="mdl-navigation__link" href="/graphs">Graphs</a> 
             </nav>
           </div>
           <main className="mdl-layout__content content">
               <Route exact path="/" component={Home} />
               <Route path="/blocks" component={Blocks} />
               <Route path="/test" component={TestGraphs} />
+              <Route path="/account" component={AccountActivity} />
               <Route path="/graphs" component={Graphs} />
           </main>
          </div>
@@ -167,6 +170,64 @@ class Graphs extends React.Component {
         return (
             <div>
               <svg width="700" height="250"></svg>
+            </div>
+        );
+    }
+}
+
+class AccountActivity extends React.Component {
+  constructor(props) {
+      super(props);
+      this.d3 = window.d3;
+      // this.state.blocks = [];
+  }
+  componentDidMount() {  
+      function getActivity(data) {
+        var accounts = {}
+        var txnList = data.result;
+        for (var i = 0; i < txnList.length; i++){
+          if (!(txnList[i].from in accounts)) {
+            accounts[txnList[i].from] = 0;
+          } else {
+            accounts[txnList[i].from] += 1;
+          }
+          if (!(txnList[i].to in accounts)){
+            accounts[txnList[i].to] = 0;
+          } else {
+            accounts[txnList[i].to] += 1;
+          }
+        }
+        return accounts;
+      }
+      function sortActivity(activity){
+        var sortable = [];
+        for (var a in activity) {
+            sortable.push([a, activity[a]]);
+        }
+        sortable.sort(function(a, b) {
+            return a[1] - b[1];
+        });
+        return sortable
+      }
+      function getTopUsers(users){
+        var numOutliers = 3;
+        var length = users.length - numOutliers;
+        var topTen = [];
+        for (var i = length; i > length - 10; i--){
+          topTen.push(users[i]);
+        }
+        return(topTen);
+      }
+      fetch('http://localhost:5000/getTime').then(res=>res.json()).then(out=>{
+        var activity = getActivity(out);
+        var sortedActivity = sortActivity(activity);
+        var topUsers = getTopUsers(sortedActivity);
+        console.log(topUsers);
+      });
+    }
+    render() {
+        return (
+            <div className="chart">
             </div>
         );
     }
