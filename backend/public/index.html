@@ -14,10 +14,38 @@
         }
     </style>
     <script src="index.js"></script>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script>
+        var myPieChart = new Chart(Chart,{
+          type: 'pie',
+          // data: {
+          //   labels: user,
+          //   datasets: [{
+          //       label: "My First dataset",
+          //       backgroundColor: 'rgb(255, 99, 132)',
+          //       borderColor: 'rgb(255, 99, 132)',
+          //       data: datas
+          //   }]
+          // }
+          data: {
+            datasets: [{
+                data: [10, 20, 30]
+            }],
+        
+            // These labels appear in the legend and in the tooltips when hovering different arcs
+            labels: [
+                'Red',
+                'Yellow',
+                'Blue'
+            ]
+          }// options: options
+        });
+    </script>
 </head>
 <svg width="960" height="500"></svg>
 <body>
 <p>tst</p>
+<canvas id="myChart"></canvas>
 </body>
 </html>

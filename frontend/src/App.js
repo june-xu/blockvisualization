@@ -179,6 +179,7 @@ class AccountActivity extends React.Component {
   constructor(props) {
       super(props);
       this.d3 = window.d3;
+      this.chart = window.Chart;
       // this.state.blocks = [];
   }
   componentDidMount() {  
@@ -223,34 +224,113 @@ class AccountActivity extends React.Component {
         var sortedActivity = sortActivity(activity);
         var topUsers = getTopUsers(sortedActivity);
         console.log(topUsers);
+
+        var datas = [];
+        var user = [];
+        for (var i = 0; i < topUsers.length; i++){
+          datas.push(topUsers[i][1]);
+          user.push(topUsers[i][0]);
+        }
+        // console.log();
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myPieChart = new this.chart(ctx,{
+          type: 'pie',
+          data: {
+            labels: user,
+            datasets: [{
+                label: "My First dataset",
+                backgroundColor: ['#e6194b','#3cb44b','#ffe119','#0082c8','#f58231','#911eb4','#46f0f0','#f032e6','#d2f53c','#fabebe'],
+                borderColor: ['#e6194b','#3cb44b','#ffe119','#0082c8','#f58231','#911eb4','#46f0f0','#f032e6','#d2f53c','#fabebe'],
+                data: datas
+            }]
+          }
+          // options: options
+        });
+
+        // var x = this.d3.scale.linear()
+        //   .domain([0, this.d3.max(data)])
+        //   .range([0, 420]);
+
+        // this.d3.select(".chart")
+        //   .selectAll("div")
+        //   .data(topUsers)
+        //   .enter().append()
+        //   .attr("fill","black")
+        //   .style("width", function(d) { return x(d[1]) + "px"; })
+        //   .attr("fill","white")
+        //   .text(function(d) { return d[0]; });
       });
     }
     render() {
         return (
+          <div>
+            <canvas id="myChart"></canvas>
             <div className="chart">
             </div>
+          </div>
         );
     }
 }
 
 class TestGraphs extends React.Component {
-    constructor(props) {
-        super(props);
-        this.d3 = window.d3;
-        this.state = { data: 1 }
+  constructor(props) {
+      super(props);
+      this.d3 = window.d3;
+      this.state = { data: 1 }
+  }
+  componentDidUpdate(prevProps, prevState) {
+      {this.renderGraph2()}
+  }
+  componentDidMount() {
+      fetch('http://localhost:5000/getTime').then(res=>res.json()).then(out=>{
+          this.setState({
+              data: out.result,
+          })
+          {this.renderGraph()}
+      });
+  }
+  renderGraph2() {
+    if (this.state.data == 1){
+        return;
+    } else {
+        var d = this.state.data;
+        var timestamps = [];
+        var byHour = [];
+        var currHour = [];
+        var start;
+        for (var x = 0; x < d.length; x++){
+            if (typeof start == 'undefined'){
+              start = d[x.timeStamp];
+            }
+            if (d[x].timeStamp - start < this.props.number*this.props.time){
+                currHour.push(d[x].timeStamp);
+            } else {
+                byHour.push(currHour.length);
+                currHour = [];
+                start = d[x].timeStamp;
+            }
+        }
+        byHour.shift();
+        var lengthData = byHour.length;
+        var data = byHour.splice(lengthData-10, lengthData);
+        var x = this.d3.scale.linear()
+            .domain([0, this.d3.max(data)])
+            .range([0, 420]);
+        
+        this.d3.select(".chart")
+            .selectAll("div").remove();
+
+        this.d3.select(".chart")
+            .selectAll("div")
+            .data(data)
+            .enter().append("div")
+            .attr("fill","black")
+            .style("width", function(d) { return x(d) + "px"; })
+            .attr("fill","white")
+            .text(function(d) { return d; });
     }
-    componentDidUpdate(prevProps, prevState) {
-        {this.renderGraph2()}
-    }
-    componentDidMount() {
-        fetch('http://localhost:5000/getTime').then(res=>res.json()).then(out=>{
-            this.setState({
-                data: out.result,
-            })
-            {this.renderGraph()}
-        });
-    }
-    renderGraph2() {
+}
+  renderGraph() {
       if (this.state.data == 1){
           return;
       } else {
@@ -277,9 +357,6 @@ class TestGraphs extends React.Component {
           var x = this.d3.scale.linear()
               .domain([0, this.d3.max(data)])
               .range([0, 420]);
-          
-          this.d3.select(".chart")
-              .selectAll("div").remove();
 
           this.d3.select(".chart")
               .selectAll("div")
@@ -291,51 +368,13 @@ class TestGraphs extends React.Component {
               .text(function(d) { return d; });
       }
   }
-    renderGraph() {
-        if (this.state.data == 1){
-            return;
-        } else {
-            var d = this.state.data;
-            var timestamps = [];
-            var byHour = [];
-            var currHour = [];
-            var start;
-            for (var x = 0; x < d.length; x++){
-                if (typeof start == 'undefined'){
-                  start = d[x.timeStamp];
-                }
-                if (d[x].timeStamp - start < this.props.number*this.props.time){
-                    currHour.push(d[x].timeStamp);
-                } else {
-                    byHour.push(currHour.length);
-                    currHour = [];
-                    start = d[x].timeStamp;
-                }
-            }
-            byHour.shift();
-            var lengthData = byHour.length;
-            var data = byHour.splice(lengthData-10, lengthData);
-            var x = this.d3.scale.linear()
-                .domain([0, this.d3.max(data)])
-                .range([0, 420]);
-
-            this.d3.select(".chart")
-                .selectAll("div")
-                .data(data)
-                .enter().append("div")
-                .attr("fill","black")
-                .style("width", function(d) { return x(d) + "px"; })
-                .attr("fill","white")
-                .text(function(d) { return d; });
-        }
-    }
-    render() {
-        return (
-            <div>
-                <div className="chart"></div>
-            </div>
-        );
-    }
+  render() {
+      return (
+          <div>
+              <div className="chart"></div>
+          </div>
+      );
+  }
 }
 
 export default App;
