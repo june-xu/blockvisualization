@@ -1,45 +1,74 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import logo from './logo.svg';
 import './App.css';
 
 const App = () => (
-  <Router>
-    <div>
-      <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/blocks">Blocks</Link>
-        </li>
-        <li>
-          <Link to="/topics">Topics</Link>
-        </li>
-        <li>
-          <Link to="/test">Test</Link>
-        </li>
-        <li>
-          <Link to="/graphs">Graphs</Link>
-        </li>
-      </ul>
-
-      <hr />
-
-      <Route exact path="/" component={Home} />
-      <Route path="/blocks" component={Blocks} />
-      <Route path="/topics" component={Topics} />
-      <Route path="/test" component={TestGraphs} />
-      <Route path="/graphs" component={Graphs} />
-    </div>
-  </Router>
+  <MuiThemeProvider>
+      <Router>
+         <div className="demo-layout-transparent mdl-layout mdl-js-layout header">
+          <header className="mdl-layout__header mdl-layout__header--transparent">
+            <div className="mdl-layout__header-row">
+              <span className="mdl-layout-title header">Block Explorer</span>
+              <div className="mdl-layout-spacer"></div>
+            </div>
+          </header>
+          <div className="mdl-layout__drawer">
+            <span className="mdl-layout-title menu">Menu</span>
+            <nav className="mdl-navigation">
+              <a className="mdl-navigation__link" href="/">Home</a>
+              <a className="mdl-navigation__link" href="/blocks">Blocks</a>
+              <a className="mdl-navigation__link" href="/topics">Topics</a>
+              <a className="mdl-navigation__link" href="">Test</a>
+              <a className="mdl-navigation__link" href="">Graphs</a> 
+            </nav>
+          </div>
+          <main className="mdl-layout__content content">
+              <Route exact path="/" component={Home} />
+              <Route path="/blocks" component={Blocks} />
+              <Route path="/topics" component={Topics} />
+              <Route path="/test" component={TestGraphs} />
+              <Route path="/graphs" component={Graphs} />
+          </main>
+         </div>
+      </Router>
+  </MuiThemeProvider>
 );
 
-const Home = () => (
-  <div>
-    <h2>dteam</h2>
-  </div>
-);
+class Home extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          value: 1,
+          hours: 1,
+        };
+    }
+    handleChange1 = (event, index, value) => this.setState({value});
+    handleChange2 = (event, index, hours) => this.setState({hours});
+    render() {
+        return (
+          <div className="selectors">
+            <DropDownMenu value={this.state.value} onChange={this.handleChange1} className="dropdown" style="width: 200px; font-family: Montserrat;">
+              <MenuItem value={1} primaryText="1"/>
+              <MenuItem value={2} primaryText="5" />
+              <MenuItem value={3} primaryText="10" />
+              <MenuItem value={4} primaryText="15" />
+              <MenuItem value={5} primaryText="30" />
+            </DropDownMenu>
+            <DropDownMenu value={this.state.hours} onChange={this.handleChange2} className="dropdown">
+              <MenuItem value={1} primaryText="Mins" />
+              <MenuItem value={2} primaryText="Hours" />
+              <MenuItem value={3} primaryText="Days" />
+              <MenuItem value={4} primaryText="Weeks" />
+            </DropDownMenu>
+          </div>
+        );
+    }
+}
 
 const BlockEntry = ({ blockNum, timestamp, numTxns }) => (
   <tr>
@@ -146,9 +175,7 @@ class TestGraphs extends React.Component {
     constructor(props) {
         super(props);
         this.d3 = window.d3;
-        this.setState({
-            blocks: []
-        });
+        this.state.blocks = [];
     }
     componentDidMount() {
         fetch('http://localhost:5000/blocks').then(res=>res.json()).then(out=>{

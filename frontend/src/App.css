@@ -31,6 +31,52 @@
   font: 10px sans-serif;
 }
 
+.demo-layout-transparent {
+  z-index: 1;
+  /* background: url('../assets/demos/transparent.jpg') center / cover; */
+}
+.demo-layout-transparent .mdl-layout__header,
+.demo-layout-transparent .mdl-layout__drawer-button {
+  /* This background is dark, so we set text to white. Use 87% black instead if
+     your background is light. */
+  color: white;
+}
+
+.content {
+    background-color: white; 
+    color: black; 
+}
+.header {
+    background-color: purple; 
+}
+
+.selectors {
+    border-radius: 3px;
+    -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+    -webkit-transition: all 200ms ease-out;
+    -o-transition: all 200ms ease-out;
+    transition: all 200ms ease-out;
+    padding-top: 25px;
+    display: flex;
+    margin-left: 200px;
+    margin-right: 200px;
+    margin-top: 54px;
+    padding-left: 123px;
+    padding-bottom: 32px;
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+.selectors:hover {
+    box-shadow: 0 0 6px rgba(35, 173, 255, 1);
+}
+.dropdown{
+    font-family: Montserrat !important;
+    margin-right: 115px; 
+    width: 200px;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
