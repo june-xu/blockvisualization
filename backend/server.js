@@ -91,6 +91,7 @@ app.get('/getCryptoKitties', (req, res) => {
   // todo: replace with call to db
   fs.readFile('./myjsonfile.json', (err, data) => {
     if (err) return console.log(err);
+    console.log(data)
     res.send(JSON.parse(data));
   });
 });
@@ -111,13 +112,11 @@ app.get('/block/:blockHeight', (req, res) => {
 
 // send balance data
 app.get('/getTime', function(req, res) {
-    fs.readFile('myjsonfile.json', 'utf8', function readFileCallback(err, data){
-        if (err){
-            console.log(err);
-        } else {
-            var obj = JSON.parse(data); //now it an object
-            res.send(dataParser(obj));
-    }});
+    fs.readFile('./myjsonfile.json', (err, data) => {
+      if (err) res.send({});
+      console.log(data);
+      res.send(JSON.parse(data));
+    });
 });
 
 // Spin up the server
