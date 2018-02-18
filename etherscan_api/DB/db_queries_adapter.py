@@ -1,4 +1,4 @@
-from DB.new_db import contract_address_no_date
+from DB.db_query_caller import contract_address_no_date
 
 def historical_query( first_date: int = None,
                      last_date: int = None,

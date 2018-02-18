@@ -1,22 +1,22 @@
 import psycopg2
 import pandas as pd
 import time
-
+from config import pg_uname, pg_pass, pg_url, table, db_name
 
 class DataBaseConnection(object):
     DBS = {
         'remote': {
-            'host': 'dteam.c0u8aiwmaigv.us-east-1.rds.amazonaws.com',
+            'host': pg_url,
             'port': 5432,
-            'user': 'postgres',
-            'password': 'dteam2018',
-            'dbname': 'dteam',
+            'user': pg_uname,
+            'password': pg_pass,
+            'dbname': table,
             'connect_timeout': 20,
         },
         'local': {
             'port': 5432,
-            'dbname': 'dteam',
-            'user': 'postgres',
+            'dbname': db_name,
+            'user': pg_uname,
             'connect_timeout': 20,
         },
     }
