@@ -87,6 +87,16 @@ app.get('/blocks', (req, res) => {
   });
 });
 
+app.get('/getCryptoKitties', (req, res) => {
+  // todo: replace with call to db
+  fs.readFile('./myjsonfile.json', (err, data) => {
+    if (err) return console.log(err);
+    res.send(JSON.parse(data));
+  });
+});
+
+
+
 app.get('/block/:blockHeight', (req, res) => {
   const blockHeight = req.params.blockHeight;
 
