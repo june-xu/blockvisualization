@@ -83,3 +83,10 @@
   to { transform: rotate(360deg); }
 }
 
+.scale {
+    width: 1068px !important;
+    height: 550px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 34px !important;
+}

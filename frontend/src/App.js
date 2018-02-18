@@ -13,27 +13,22 @@ const App = () => (
          <div className="demo-layout-transparent mdl-layout mdl-js-layout header">
           <header className="mdl-layout__header mdl-layout__header--transparent">
             <div className="mdl-layout__header-row">
-              <span className="mdl-layout-title header">Block Explorer</span>
+              <span className="mdl-layout-title header">CryptoKitties Block Explorer</span>
               <div className="mdl-layout-spacer"></div>
             </div>
           </header>
           <div className="mdl-layout__drawer">
             <span className="mdl-layout-title menu">Menu</span>
             <nav className="mdl-navigation">
-              <a className="mdl-navigation__link" href="/">Home</a>
+              <a className="mdl-navigation__link" href="/">General Patterns</a>
               <a className="mdl-navigation__link" href="/blocks">Blocks</a>
-              <a className="mdl-navigation__link" href="/topics">Topics</a>
-              <a className="mdl-navigation__link" href="/test">Test</a>
-              <a className="mdl-navigation__link" href="/account">Account Activity</a> 
-              <a className="mdl-navigation__link" href="/graphs">Graphs</a> 
+              <a className="mdl-navigation__link" href="/account">Account Activity</a>
             </nav>
           </div>
           <main className="mdl-layout__content content">
               <Route exact path="/" component={Home} />
               <Route path="/blocks" component={Blocks} />
-              <Route path="/test" component={TestGraphs} />
               <Route path="/account" component={AccountActivity} />
-              <Route path="/graphs" component={Graphs} />
           </main>
          </div>
       </Router>
@@ -114,65 +109,6 @@ class Blocks extends React.Component {
       </div>
     );
   }
-}
-
-class Graphs extends React.Component {
-    constructor(props) {
-        super(props);
-        this.d3 = window.d3;
-    }
-    componentDidMount() {
-        var data = this.d3.range(1000).map(this.d3.randomBates(10));
-        var formatCount = this.d3.format(",.0f");
-
-        var svg = this.d3.select("svg"),
-            margin = {top: 10, right: 30, bottom: 30, left: 30},
-            width = +svg.attr("width") - margin.left - margin.right,
-            height = +svg.attr("height") - margin.top - margin.bottom,
-            g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        var x = this.d3.scaleLinear()
-            .rangeRound([0, width]);
-
-        var bins = this.d3.histogram()
-            .domain(x.domain())
-            .thresholds(x.ticks(20))
-            (data);
-
-        var y = this.d3.scaleLinear()
-            .domain([0, this.d3.max(bins, function(d) { return d.length; })])
-            .range([height, 0]);
-
-        var bar = g.selectAll(".bar")
-          .data(bins)
-          .enter().append("g")
-            .attr("class", "bar")
-            .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
-
-        bar.append("rect")
-            .attr("x", 1)
-            .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
-            .attr("height", function(d) { return height - y(d.length); });
-
-        bar.append("text")
-            .attr("dy", ".75em")
-            .attr("y", 6)
-            .attr("x", (x(bins[0].x1) - x(bins[0].x0)) / 2)
-            .attr("text-anchor", "middle")
-            .text(function(d) { return formatCount(d.length); });
-
-        g.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + height + ")")
-            .call(this.d3.axisBottom(x));
-     }
-    render() {
-        return (
-            <div>
-              <svg width="700" height="250"></svg>
-            </div>
-        );
-    }
 }
 
 class AccountActivity extends React.Component {
@@ -348,7 +284,7 @@ class TestGraphs extends React.Component {
                 start = d[y.timeStamp];
               }
               if (d[y].timeStamp - start < this.props.number*this.props.time){
-                  total_gas += parseInt(d[y].gasPrice);
+                  total_gas += parseInt(d[y].gasUsed);
               } else {
                   gasPriceArray.push(total_gas);
                   total_gas = 0;
@@ -356,41 +292,54 @@ class TestGraphs extends React.Component {
               }
             }
 
+            var totalGasPriceArray = [];
+            var curr_gas = 0;
+            var start = 'undefined';
+            for (var z = 0; z < d.length; z++) {
+              if (typeof start == 'undefined'){
+                start = d[z.timeStamp];
+              }
+              if (d[z].timeStamp - start < this.props.number*this.props.time){
+                  if (parseInt(d[z].cumulativeGasUsed) > curr_gas) {
+                    curr_gas = parseInt(d[z].cumulativeGasUsed);
+                  }
+              } else {
+                  totalGasPriceArray.push(curr_gas);
+                  total_gas = 0;
+                  start = d[z].timeStamp;
+              }
+            }
+
 
           byHour.shift();
           var lengthData = byHour.length;
           var data = byHour.splice(lengthData-10, lengthData);
-
-//          var dataObject = [{
-//            labels: ["10hr","9hr","8hr","7hr","6hr","5hr","4hr","3hr","2hr","1hr",],
-//            //backgroundColor: ['#e6194b','#3cb44b','#ffe119','#0082c8','#f58231','#911eb4','#46f0f0','#f032e6','#d2f53c','#fabebe'],
-//            backgroundColor: "#e6194b",
-//            borderColor:  "#e6194b",
-//            //borderColor: ['#e6194b','#3cb44b','#ffe119','#0082c8','#f58231','#911eb4','#46f0f0','#f032e6','#d2f53c','#fabebe'],
-//            borderWidth: 1,
-//            data: [0, 10, 5, 2, 20, 30, 45],
-//            //data: data,
-//          }]
-            var gasPriceData = {
+        var gasPriceData = {
+            labels: ["10hr","9hr","8hr","7hr","6hr","5hr","4hr","3hr","2hr","1hr",],
+            datasets: [{
+                label: "Amount of Gas Used in Transactions",
+                backgroundColor: "#e6194b",
+                borderColor: "#e6194b",
+                borderWidth: 1,
+                data: gasPriceArray
+            }, {
+               label: 'Cumulative Gas used',
+               backgroundColor: '#f032e6',
+               borderColor: '#f032e6',
+               borderWidth: 1,
+               data: totalGasPriceArray
+            }]
+        };
+        var barChartData = {
                 labels: ["10hr","9hr","8hr","7hr","6hr","5hr","4hr","3hr","2hr","1hr",],
                 datasets: [{
-                    label: "Amount of Gas Used",
-                    backgroundColor: "#e6194b",
-                    borderColor: "#e6194b",
+                    label: "Number of Transactions",
+                    backgroundColor: '#3cb44b',
+                    borderColor: '#3cb44b',
                     borderWidth: 1,
-                    data: gasPriceArray
+                    data: data
                 }]
-            };
-            var barChartData = {
-                    labels: ["10hr","9hr","8hr","7hr","6hr","5hr","4hr","3hr","2hr","1hr",],
-                    datasets: [{
-                        label: "Number of Transactions",
-                        backgroundColor: '#3cb44b',
-                        borderColor: '#3cb44b',
-                        borderWidth: 1,
-                        data: data
-                    }]
-            };
+        };
           var ctx = document.getElementById('myChart').getContext('2d');
           var myBarChart = new this.chart(ctx, {
             type: 'bar',
@@ -442,118 +391,13 @@ class TestGraphs extends React.Component {
   render() {
       return (
           <div>
-              <canvas id="myChart"></canvas>
+              <canvas id="myChart" className="scale"></canvas>
               <div className="chart"></div>
-              <canvas id="myChart1"></canvas>
+              <canvas id="myChart1" className="scale"></canvas>
               <div className="chartGasPrice"></div>
           </div>
       );
   }
 }
-
-// class TestGraphs extends React.Component {
-//   constructor(props) {
-//       super(props);
-//       this.d3 = window.d3;
-//       this.state = { data: 1 }
-//   }
-//   componentDidUpdate(prevProps, prevState) {
-//       {this.renderGraph2()}
-//   }
-//   componentDidMount() {
-//       fetch('http://localhost:5000/getTime').then(res=>res.json()).then(out=>{
-//           this.setState({
-//               data: out.result,
-//           })
-//           {this.renderGraph()}
-//       });
-//   }
-//   renderGraph2() {
-//     if (this.state.data == 1){
-//         return;
-//     } else {
-//         var d = this.state.data;
-//         var timestamps = [];
-//         var byHour = [];
-//         var currHour = [];
-//         var start;
-//         for (var x = 0; x < d.length; x++){
-//             if (typeof start == 'undefined'){
-//               start = d[x.timeStamp];
-//             }
-//             if (d[x].timeStamp - start < this.props.number*this.props.time){
-//                 currHour.push(d[x].timeStamp);
-//             } else {
-//                 byHour.push(currHour.length);
-//                 currHour = [];
-//                 start = d[x].timeStamp;
-//             }
-//         }
-//         byHour.shift();
-//         var lengthData = byHour.length;
-//         var data = byHour.splice(lengthData-10, lengthData);
-//         var x = this.d3.scale.linear()
-//             .domain([0, this.d3.max(data)])
-//             .range([0, 420]);
-        
-//         this.d3.select(".chart")
-//             .selectAll("div").remove();
-
-//         this.d3.select(".chart")
-//             .selectAll("div")
-//             .data(data)
-//             .enter().append("div")
-//             .attr("fill","black")
-//             .style("width", function(d) { return x(d) + "px"; })
-//             .attr("fill","white")
-//             .text(function(d) { return d; });
-//     }
-// }
-//   renderGraph() {
-//       if (this.state.data == 1){
-//           return;
-//       } else {
-//           var d = this.state.data;
-//           var timestamps = [];
-//           var byHour = [];
-//           var currHour = [];
-//           var start;
-//           for (var x = 0; x < d.length; x++){
-//               if (typeof start == 'undefined'){
-//                 start = d[x.timeStamp];
-//               }
-//               if (d[x].timeStamp - start < this.props.number*this.props.time){
-//                   currHour.push(d[x].timeStamp);
-//               } else {
-//                   byHour.push(currHour.length);
-//                   currHour = [];
-//                   start = d[x].timeStamp;
-//               }
-//           }
-//           byHour.shift();
-//           var lengthData = byHour.length;
-//           var data = byHour.splice(lengthData-10, lengthData);
-//           var x = this.d3.scale.linear()
-//               .domain([0, this.d3.max(data)])
-//               .range([0, 420]);
-
-//           this.d3.select(".chart")
-//               .selectAll("div")
-//               .data(data)
-//               .enter().append("div")
-//               .attr("fill","black")
-//               .style("width", function(d) { return x(d) + "px"; })
-//               .attr("fill","white")
-//               .text(function(d) { return d; });
-//       }
-//   }
-//   render() {
-//       return (
-//           <div>
-//               <div className="chart"></div>
-//           </div>
-//       );
-//   }
-// }
 
 export default App;
