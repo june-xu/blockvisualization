@@ -42,7 +42,7 @@ class Home extends React.Component {
         super(props);
         this.state = {
           value: 1,
-          hours: 1,
+          hours: 60,
         };
     }
     handleChange1 = (event, index, value) => this.setState({value});
