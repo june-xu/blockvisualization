@@ -18558,7 +18558,6 @@
       <change beforePath="" afterPath="$PROJECT_DIR$/backend/fixtures/tx/0xfff8d22962a3ade0c961f9636782e92360973ba4a5456c72f9e6d0cfc95ab105.json" />
       <change beforePath="" afterPath="$PROJECT_DIR$/backend/fixtures/tx/0xfffcb4100aecfbd786831c67281ec205e72250cafa3b9373ae349da4fe8364bc.json" />
       <change beforePath="" afterPath="$PROJECT_DIR$/backend/fixtures/tx/0xfffe12a7dde2dbc21056352619963fdb14c61cc5e2c5ec46e3af58c8841543c2.json" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.js" afterPath="$PROJECT_DIR$/frontend/src/App.js" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -18574,8 +18573,8 @@
       <file leaf-file-name="App.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/frontend/src/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3225">
-              <caret line="215" column="10" lean-forward="false" selection-start-line="215" selection-start-column="10" selection-end-line="215" selection-end-column="10" />
+            <state relative-caret-position="1275">
+              <caret line="85" column="0" lean-forward="false" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -19057,8 +19056,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/frontend/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3225">
-          <caret line="215" column="10" lean-forward="false" selection-start-line="215" selection-start-column="10" selection-end-line="215" selection-end-column="10" />
+        <state relative-caret-position="1275">
+          <caret line="85" column="0" lean-forward="false" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
           <folding />
         </state>
       </provider>

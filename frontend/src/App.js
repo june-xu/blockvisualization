@@ -195,7 +195,6 @@ class TestGraphs extends React.Component {
             <svg></svg>
            </div>
         );
-}
 
 const Topics = ({ match }) => (
   <div>
