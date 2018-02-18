@@ -240,7 +240,7 @@ class TestGraphs extends React.Component {
         this.state = { data: 1 }
     }
     componentDidUpdate(prevProps, prevState) {
-        {this.renderGraph()}
+        {this.renderGraph2()}
     }
     componentDidMount() {
         fetch('http://localhost:5000/getTime').then(res=>res.json()).then(out=>{
@@ -250,6 +250,47 @@ class TestGraphs extends React.Component {
             {this.renderGraph()}
         });
     }
+    renderGraph2() {
+      if (this.state.data == 1){
+          return;
+      } else {
+          var d = this.state.data;
+          var timestamps = [];
+          var byHour = [];
+          var currHour = [];
+          var start;
+          for (var x = 0; x < d.length; x++){
+              if (typeof start == 'undefined'){
+                start = d[x.timeStamp];
+              }
+              if (d[x].timeStamp - start < this.props.number*this.props.time){
+                  currHour.push(d[x].timeStamp);
+              } else {
+                  byHour.push(currHour.length);
+                  currHour = [];
+                  start = d[x].timeStamp;
+              }
+          }
+          byHour.shift();
+          var lengthData = byHour.length;
+          var data = byHour.splice(lengthData-10, lengthData);
+          var x = this.d3.scale.linear()
+              .domain([0, this.d3.max(data)])
+              .range([0, 420]);
+          
+          this.d3.select(".chart")
+              .selectAll("div").remove();
+
+          this.d3.select(".chart")
+              .selectAll("div")
+              .data(data)
+              .enter().append("div")
+              .attr("fill","black")
+              .style("width", function(d) { return x(d) + "px"; })
+              .attr("fill","white")
+              .text(function(d) { return d; });
+      }
+  }
     renderGraph() {
         if (this.state.data == 1){
             return;
@@ -277,6 +318,7 @@ class TestGraphs extends React.Component {
             var x = this.d3.scale.linear()
                 .domain([0, this.d3.max(data)])
                 .range([0, 420]);
+
             this.d3.select(".chart")
                 .selectAll("div")
                 .data(data)
@@ -290,7 +332,6 @@ class TestGraphs extends React.Component {
     render() {
         return (
             <div>
-                {this.renderGraph()}
                 <div className="chart"></div>
             </div>
         );
