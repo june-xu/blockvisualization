@@ -280,7 +280,7 @@ class TestGraphs extends React.Component {
       this.state = { data: 1 }
   }
   componentDidUpdate(prevProps, prevState) {
-      {this.renderGraph2()}
+      {this.renderGraph()}
   }
   componentDidMount() {
       fetch('http://localhost:5000/getTime').then(res=>res.json()).then(out=>{
@@ -338,9 +338,29 @@ class TestGraphs extends React.Component {
                   start = d[x].timeStamp;
               }
           }
+
+
+            var gasPriceArray = [];
+            var total_gas = 0;
+            var start = 'undefined';
+            for (var y = 0; y < d.length; y++) {
+              if (typeof start == 'undefined'){
+                start = d[y.timeStamp];
+              }
+              if (d[y].timeStamp - start < this.props.number*this.props.time){
+                  total_gas += parseInt(d[y].gasPrice);
+              } else {
+                  gasPriceArray.push(total_gas);
+                  total_gas = 0;
+                  start = d[y].timeStamp;
+              }
+            }
+
+
           byHour.shift();
           var lengthData = byHour.length;
           var data = byHour.splice(lengthData-10, lengthData);
+
 //          var dataObject = [{
 //            labels: ["10hr","9hr","8hr","7hr","6hr","5hr","4hr","3hr","2hr","1hr",],
 //            //backgroundColor: ['#e6194b','#3cb44b','#ffe119','#0082c8','#f58231','#911eb4','#46f0f0','#f032e6','#d2f53c','#fabebe'],
@@ -351,12 +371,22 @@ class TestGraphs extends React.Component {
 //            data: [0, 10, 5, 2, 20, 30, 45],
 //            //data: data,
 //          }]
+            var gasPriceData = {
+                labels: ["10hr","9hr","8hr","7hr","6hr","5hr","4hr","3hr","2hr","1hr",],
+                datasets: [{
+                    label: "Amount of Gas Used",
+                    backgroundColor: "#e6194b",
+                    borderColor: "#e6194b",
+                    borderWidth: 1,
+                    data: gasPriceArray
+                }]
+            };
             var barChartData = {
                     labels: ["10hr","9hr","8hr","7hr","6hr","5hr","4hr","3hr","2hr","1hr",],
                     datasets: [{
                         label: "Number of Transactions",
-                        backgroundColor: "#e6194b",
-                        borderColor: "#e6194b",
+                        backgroundColor: '#3cb44b',
+                        borderColor: '#3cb44b',
                         borderWidth: 1,
                         data: data
                     }]
@@ -382,7 +412,29 @@ class TestGraphs extends React.Component {
                       stacked: true
                   }]
               }
-
+            }
+        });
+          var ctx1 = document.getElementById('myChart1').getContext('2d');
+          var gasPriceChart = new this.chart(ctx1, {
+            type: 'bar',
+            data: gasPriceData,
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'CryptoKitties Gas Price'
+                },
+                scales: {
+                  xAxes: [{
+                      stacked: true
+                  }],
+                  yAxes: [{
+                      stacked: true
+                  }]
+              }
             }
         });
         }
@@ -392,6 +444,8 @@ class TestGraphs extends React.Component {
           <div>
               <canvas id="myChart"></canvas>
               <div className="chart"></div>
+              <canvas id="myChart1"></canvas>
+              <div className="chartGasPrice"></div>
           </div>
       );
   }
