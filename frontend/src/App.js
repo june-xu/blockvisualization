@@ -141,7 +141,9 @@ class Blocks extends React.Component {
   render() {
     return (
       <div className="blocks-header">
-        <h2 className="title">Blocks</h2>
+        <h2 className="title">Blocks </h2>
+        <canvas id="chart3" className="scale"></canvas>
+        <div className="chart"></div>
         <table className="blocks-table"><tbody>
         <tr>
           <td>Block Height</td>
@@ -152,8 +154,6 @@ class Blocks extends React.Component {
           key={block.blockNum} timestamp={block.timestamp} blockNum={block.blockNum} numTxns={block.txns}
         />)}
         </tbody></table>
-        <canvas id="chart3" className="scale"></canvas>
-        <div className="chart"></div>
       </div>
     );
   }
