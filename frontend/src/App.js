@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import logo from './logo.svg';
 import './App.css';
@@ -27,6 +27,7 @@ const App = () => (
       <hr />
 
       <Route exact path="/" component={Home} />
+      <Route path="/block/:blockNum" component={Block} />
       <Route path="/blocks" component={Blocks} />
       <Route path="/topics" component={Topics} />
       <Route path="/test" component={TestGraphs} />
@@ -43,7 +44,7 @@ const Home = () => (
 
 const BlockEntry = ({ blockNum, timestamp, numTxns }) => (
   <tr>
-    <td>{blockNum}</td>
+    <td><Link to={"/block/"+blockNum}>{blockNum}</Link></td>
     <td>{(new Date(timestamp*1000)).toString()}</td>
     <td>{numTxns}</td>
   </tr>
@@ -194,7 +195,6 @@ class TestGraphs extends React.Component {
             <svg></svg>
            </div>
         );
-    }
 }
 
 const Topics = ({ match }) => (
