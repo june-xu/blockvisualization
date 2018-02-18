@@ -219,20 +219,23 @@ class TestGraphs extends React.Component {
 
     // this.d3.select("chart")
     //   .selectAll("div").remove();      
-      
+    this.d3.select(".chart")
+    .selectAll("div")
+    .data(data)
+    .enter().append("div")
+      .attr("fill","black")
+      .style("width", function(d) { return x(d) + "px"; })
+      .attr("fill","white")
+      .text(function(d) { return d; });
 
-    this.d3.select(".chart").transition()
-      .selectAll("div")
-      .data(data)
-      .enter().append
-    // this.d3.select(".chart")
+    // this.d3.select(".chart").transition()
     //   .selectAll("div")
     //   .data(data)
-    //   .enter().append("div")
-    //     .attr("fill","black")
-    //     .style("width", function(d) { return x(d) + "px"; })
-    //     .attr("fill","white")
-    //     .text(function(d) { return d; });   
+    //   .enter().append
+    //   .attr("fill","black")
+    //   .style("width", function(d) { return x(d) + "px"; })
+    //   .attr("fill","white")
+    //   .text(function(d) { return d; });   
     }
     componentDidMount() {  
         fetch('http://localhost:5000/getTime').then(res=>res.json()).then(out=>{
