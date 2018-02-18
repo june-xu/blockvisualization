@@ -316,7 +316,7 @@ class TestGraphs extends React.Component {
         var data = byHour.splice(lengthData-10, lengthData);
 
     }
-}
+  }
   renderGraph() {
       if (this.state.data == 1){
           return;
@@ -341,21 +341,40 @@ class TestGraphs extends React.Component {
           byHour.shift();
           var lengthData = byHour.length;
           var data = byHour.splice(lengthData-10, lengthData);
-          var dataObject = {
-            labels: ["10hr","9hr","8hr","7hr","6hr","5hr","4hr","3hr","2hr","1hr",],
-            datasets: {
-              // label: "Transaction Time Series",
-              backgroundColor: ['#e6194b','#3cb44b','#ffe119','#0082c8','#f58231','#911eb4','#46f0f0','#f032e6','#d2f53c','#fabebe'],
-              borderColor: ['#e6194b','#3cb44b','#ffe119','#0082c8','#f58231','#911eb4','#46f0f0','#f032e6','#d2f53c','#fabebe'],
-              data: data
-            }
-          }
+//          var dataObject = [{
+//            labels: ["10hr","9hr","8hr","7hr","6hr","5hr","4hr","3hr","2hr","1hr",],
+//            //backgroundColor: ['#e6194b','#3cb44b','#ffe119','#0082c8','#f58231','#911eb4','#46f0f0','#f032e6','#d2f53c','#fabebe'],
+//            backgroundColor: "#e6194b",
+//            borderColor:  "#e6194b",
+//            //borderColor: ['#e6194b','#3cb44b','#ffe119','#0082c8','#f58231','#911eb4','#46f0f0','#f032e6','#d2f53c','#fabebe'],
+//            borderWidth: 1,
+//            data: [0, 10, 5, 2, 20, 30, 45],
+//            //data: data,
+//          }]
+            var barChartData = {
+                    labels: ["10hr","9hr","8hr","7hr","6hr","5hr","4hr","3hr","2hr","1hr",],
+                    datasets: [{
+                        label: "Number of Transactions",
+                        backgroundColor: "#e6194b",
+                        borderColor: "#e6194b",
+                        borderWidth: 1,
+                        data: data
+                    }]
+            };
           var ctx = document.getElementById('myChart').getContext('2d');
           var myBarChart = new this.chart(ctx, {
             type: 'bar',
-            data: dataObject,
+            data: barChartData,
             options: {
-              scales: {
+                responsive: true,
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'CryptoKitties Traffic'
+                },
+                scales: {
                   xAxes: [{
                       stacked: true
                   }],
@@ -363,8 +382,8 @@ class TestGraphs extends React.Component {
                       stacked: true
                   }]
               }
-          }
-            // options: options
+
+            }
         });
         }
       }
