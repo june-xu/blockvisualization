@@ -94,8 +94,8 @@ class Blocks extends React.Component {
 
   render() {
     return (
-      <div>
-        <h2>Blocks</h2>
+      <div className="blocks-header">
+        <h2 className="title">Blocks</h2>
         <table><tbody>
         <tr>
           <td>Block Height</td>
@@ -167,7 +167,6 @@ class AccountActivity extends React.Component {
           datas.push(topUsers[i][1]);
           user.push(topUsers[i][0]);
         }
-        // console.log();
         var ctx = document.getElementById('myChart').getContext('2d');
         var myPieChart = new this.chart(ctx,{
           type: 'pie',
@@ -180,26 +179,13 @@ class AccountActivity extends React.Component {
                 data: datas
             }]
           }
-          // options: options
         });
-
-        // var x = this.d3.scale.linear()
-        //   .domain([0, this.d3.max(data)])
-        //   .range([0, 420]);
-
-        // this.d3.select(".chart")
-        //   .selectAll("div")
-        //   .data(topUsers)
-        //   .enter().append()
-        //   .attr("fill","black")
-        //   .style("width", function(d) { return x(d[1]) + "px"; })
-        //   .attr("fill","white")
-        //   .text(function(d) { return d[0]; });
       });
     }
     render() {
         return (
           <div>
+            <p className="leader"> Leaderboard for CryptoKitty Transactions</p>
             <canvas id="myChart"></canvas>
             <div className="chart">
             </div>

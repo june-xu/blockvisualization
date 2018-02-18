@@ -90,3 +90,19 @@
     margin-right: auto !important;
     margin-top: 34px !important;
 }
+
+.leader {
+    text-align: center;
+    font-size: xx-large;
+    padding: 47px;
+}
+
+.title {
+    font-family: Montserrat;
+    background-color: aqua;
+    width: 152px;
+}
+
+.blocks-header {
+    padding-left: 80px;
+}
