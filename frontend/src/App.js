@@ -22,15 +22,13 @@ const App = () => (
             <nav className="mdl-navigation">
               <a className="mdl-navigation__link" href="/">Home</a>
               <a className="mdl-navigation__link" href="/blocks">Blocks</a>
-              <a className="mdl-navigation__link" href="/topics">Topics</a>
               <a className="mdl-navigation__link" href="">Test</a>
-              <a className="mdl-navigation__link" href="">Graphs</a> 
+              <a className="mdl-navigation__link" href="">Graphs</a>
             </nav>
           </div>
           <main className="mdl-layout__content content">
               <Route exact path="/" component={Home} />
               <Route path="/blocks" component={Blocks} />
-              <Route path="/topics" component={Topics} />
               <Route path="/test" component={TestGraphs} />
               <Route path="/graphs" component={Graphs} />
           </main>
@@ -53,14 +51,14 @@ class Home extends React.Component {
         return (
           <div className="container">
             <div className="selectors">
-              <DropDownMenu value={this.state.value} onChange={this.handleChange1} className="dropdown" style="width: 200px; font-family: Montserrat;">
+              <DropDownMenu value={this.state.value} onChange={this.handleChange1.bind(this)} className="dropdown" style="width: 200px; font-family: Montserrat;">
                 <MenuItem value={1} primaryText="1"/>
                 <MenuItem value={5} primaryText="5" />
                 <MenuItem value={10} primaryText="10" />
                 <MenuItem value={15} primaryText="15" />
                 <MenuItem value={30} primaryText="30" />
               </DropDownMenu>
-              <DropDownMenu value={this.state.hours} onChange={this.handleChange2} className="dropdown">
+              <DropDownMenu value={this.state.hours} onChange={this.handleChange2.bind(this)} className="dropdown">
                 <MenuItem value={60} primaryText="Mins" />
                 <MenuItem value={3600} primaryText="Hours" />
                 <MenuItem value={86400} primaryText="Days" />
@@ -122,7 +120,6 @@ class Graphs extends React.Component {
     }
     componentDidMount() {
         var data = this.d3.range(1000).map(this.d3.randomBates(10));
-        // console.log(data);
         var formatCount = this.d3.format(",.0f");
 
         var svg = this.d3.select("svg"),
@@ -179,152 +176,64 @@ class TestGraphs extends React.Component {
     constructor(props) {
         super(props);
         this.d3 = window.d3;
-        this.data = 0;
-        // this.state.blocks = [];
+        this.state = { data: 1 }
     }
-    componentDidUpdate() {
-      console.log("Props" + this.props.number + ", " + this.props.time);
-      var dataParser = function(deets, number, time){
-        var d = deets.result
-    
-          var timestamps = [];
-          var byHour = [];
-          var currHour = [];
-          var start;
-          for (var x = 0; x < d.length; x++){
-              if (typeof start == 'undefined'){
-                start = d[x.timeStamp];
-              }
-              if (d[x].timeStamp - start < number*time){
-                  currHour.push(d[x].timeStamp);
-              } else {
-                  byHour.push(currHour.length);
-                  currHour = [];
-                  start = d[x].timeStamp;
-              }
-          }
-          byHour.shift();
-          // console.log(byHour);
-          var lengthData = byHour.length;
-          console.log(byHour);
-          return(byHour.splice(lengthData-10, lengthData))
+    componentDidUpdate(prevProps, prevState) {
+        {this.renderGraph()}
     }
-    // var data = this.d3.range(1000).map(this.d3.randomBates(10));
-    var data = dataParser(this.data, this.props.number, this.props.time);
-    // var data = [5,6,4,7,45,23];
-    // console.log(data);
-    var x = this.d3.scale.linear()
-      .domain([0, this.d3.max(data)])
-      .range([0, 420]);
-
-    // this.d3.select("chart")
-    //   .selectAll("div").remove();      
-    this.d3.select(".chart")
-    .selectAll("div")
-    .data(data)
-    .enter().append("div")
-      .attr("fill","black")
-      .style("width", function(d) { return x(d) + "px"; })
-      .attr("fill","white")
-      .text(function(d) { return d; });
-
-    // this.d3.select(".chart").transition()
-    //   .selectAll("div")
-    //   .data(data)
-    //   .enter().append
-    //   .attr("fill","black")
-    //   .style("width", function(d) { return x(d) + "px"; })
-    //   .attr("fill","white")
-    //   .text(function(d) { return d; });   
-    }
-    componentDidMount() {  
+    componentDidMount() {
         fetch('http://localhost:5000/getTime').then(res=>res.json()).then(out=>{
-          // this.setState({
-          //   blocks: out,
-          // })
-          // console.log(out)
-          console.log(this.d3)
-          // parse data into sections of time. Get the 10 most recent
-          this.data = out
-          var dataParser = function(deets, number, time){
-              var d = deets.result
-          
-                var timestamps = [];
-                var byHour = [];
-                var currHour = [];
-                var start;
-                for (var x = 0; x < d.length; x++){
-                    if (typeof start == 'undefined'){
-                      start = d[x.timeStamp];
-                    }
-                    if (d[x].timeStamp - start < number*time){
-                        currHour.push(d[x].timeStamp);
-                    } else {
-                        byHour.push(currHour.length);
-                        currHour = [];
-                        start = d[x].timeStamp;
-                    }
+            this.setState({
+                data: out.result,
+            })
+            {this.renderGraph()}
+        });
+    }
+    renderGraph() {
+        if (this.state.data == 1){
+            return;
+        } else {
+            var d = this.state.data;
+            var timestamps = [];
+            var byHour = [];
+            var currHour = [];
+            var start;
+            for (var x = 0; x < d.length; x++){
+                if (typeof start == 'undefined'){
+                  start = d[x.timeStamp];
                 }
-                byHour.shift();
-                // console.log(byHour);
-                var lengthData = byHour.length;
-                console.log(byHour);
-                return(byHour.splice(lengthData-10, lengthData))
-          }
-          // var data = this.d3.range(1000).map(this.d3.randomBates(10));
-          // var data = dataParser(out, this.props.number, this.props.time);
-          var data = dataParser(out, 5, 86400);
-          // var data = [5,6,4,7,45,23];
-          var x = this.d3.scale.linear()
-            .domain([0, this.d3.max(data)])
-            .range([0, 420]);
-
-          this.d3.select(".chart")
-            .selectAll("div")
-            .data(data)
-            .enter().append("div")
-              .attr("fill","black")
-              .style("width", function(d) { return x(d) + "px"; })
-              .attr("fill","white")
-              .text(function(d) { return d; });
-        })
-      }
-      render() {
-          return (
-              <div className="chart">
-              </div>
-          );
-      }
+                if (d[x].timeStamp - start < this.props.number*this.props.time){
+                    currHour.push(d[x].timeStamp);
+                } else {
+                    byHour.push(currHour.length);
+                    currHour = [];
+                    start = d[x].timeStamp;
+                }
+            }
+            byHour.shift();
+            var lengthData = byHour.length;
+            var data = byHour.splice(lengthData-10, lengthData);
+            var x = this.d3.scale.linear()
+                .domain([0, this.d3.max(data)])
+                .range([0, 420]);
+            this.d3.select(".chart")
+                .selectAll("div")
+                .data(data)
+                .enter().append("div")
+                .attr("fill","black")
+                .style("width", function(d) { return x(d) + "px"; })
+                .attr("fill","white")
+                .text(function(d) { return d; });
+        }
+    }
+    render() {
+        return (
+            <div>
+                {this.renderGraph()}
+                <div className="chart"></div>
+            </div>
+        );
+    }
 }
-
-const Topics = ({ match }) => (
-  <div>
-    <h2>Topics</h2>
-    <ul>
-      <li>
-        <Link to={`${match.url}/rendering`}>Rendering with React</Link>
-      </li>
-      <li>
-        <Link to={`${match.url}/components`}>Components</Link>
-      </li>
-      <li>
-        <Link to={`${match.url}/props-v-state`}>Props v. State</Link>
-      </li>
-    </ul>
-
-    <Route path={`${match.url}/:topicId`} component={Topic} />
-    <Route
-      exact
-      path={match.url}
-      render={() => <h3>Please select a topic.</h3>}
-    />
-  </div>
-);
-
-const Topic = ({ match }) => (
-  <div>
-    <h3>{match.params.topicId}</h3>
-  </div>
-);
 
 export default App;
